@@ -21,6 +21,11 @@ describe 'nfs', :type => 'class' do
       it { should contain_concat__fragment('nfs_exports_root').with( 'target' => '/etc/exports' ) }
       it { should contain_file('/export').with( 'ensure' => 'directory' ) }
     end
+    context "nfs_v4 => true, nfs_v4_root_export_ensure => absent" do
+      let(:params) { { :nfs_v4 => true, :nfs_v4_root_export_ensure => 'absent', :server_enabled => true } }
+      it { should_not contain_concat__fragment('nfs_exports_root').with( 'target' => '/etc/exports' ) }
+      it { should contain_file('/export').with( 'ensure' => 'directory' ) }
+    end
 
     context "operatingsysten => ubuntu" do
       let(:facts) { {

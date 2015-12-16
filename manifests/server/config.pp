@@ -27,11 +27,14 @@ class nfs::server::config {
   }
 
   if $::nfs::nfs_v4 {
-    concat::fragment { 'nfs_exports_root':
-      target  => '/etc/exports',
-      content => "${::nfs::server::nfs_v4_export_root} ${::nfs::server::nfs_v4_export_root_clients}\n",
-      order   => 02
+    if ($::nfs::server::nfs_v4_root_export_ensure != 'absent') {
+      concat::fragment { 'nfs_exports_root':
+        target  => '/etc/exports',
+        content => "${::nfs::server::nfs_v4_export_root} ${::nfs::server::nfs_v4_export_root_clients}\n",
+        order   => 02
+      }
     }
+
     file { $::nfs::server::nfs_v4_export_root:
       ensure => directory,
     }
